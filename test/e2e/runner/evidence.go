@@ -250,7 +250,7 @@ func readPrivKey(keyFilePath string) (crypto.PrivKey, error) {
 
 func makeHeaderRandom(chainID string, height int64) *types.Header {
 	return &types.Header{
-		Version:            version.Consensus{Block: version.BlockProtocol, App: 1},
+		Version:            types.VersionParams{Block: version.BlockProtocol, App: 1},
 		ChainID:            chainID,
 		Height:             height,
 		Time:               time.Now(),

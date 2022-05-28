@@ -11,6 +11,8 @@ import (
 	"github.com/tendermint/tendermint/crypto/sr25519"
 	tmstrings "github.com/tendermint/tendermint/libs/strings"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
+	tmversion "github.com/tendermint/tendermint/proto/tendermint/version"
 )
 
 const (
@@ -74,7 +76,15 @@ type ValidatorParams struct {
 }
 
 type VersionParams struct {
-	AppVersion uint64 `json:"app_version,string"`
+	Block uint64 `json:"block,string"`
+	App   uint64 `json:"app,string"`
+}
+
+func (c VersionParams) ToProto() tmversion.Consensus {
+	return tmversion.Consensus{
+		Block: c.Block,
+		App:   c.App,
+	}
 }
 
 // SynchronyParams influence the validity of block timestamps.
@@ -135,7 +145,7 @@ func DefaultValidatorParams() ValidatorParams {
 
 func DefaultVersionParams() VersionParams {
 	return VersionParams{
-		AppVersion: 0,
+		App: 0,
 	}
 }
 
@@ -377,7 +387,7 @@ func (params ConsensusParams) UpdateConsensusParams(params2 *tmproto.ConsensusPa
 		res.Validator.PubKeyTypes = append([]string{}, params2.Validator.PubKeyTypes...)
 	}
 	if params2.Version != nil {
-		res.Version.AppVersion = params2.Version.AppVersion
+		res.Version.App = params2.Version.App
 	}
 	if params2.Synchrony != nil {
 		if params2.Synchrony.MessageDelay != nil {
@@ -423,7 +433,7 @@ func (params *ConsensusParams) ToProto() tmproto.ConsensusParams {
 			PubKeyTypes: params.Validator.PubKeyTypes,
 		},
 		Version: &tmproto.VersionParams{
-			AppVersion: params.Version.AppVersion,
+			App: params.Version.App,
 		},
 		Synchrony: &tmproto.SynchronyParams{
 			MessageDelay: &params.Synchrony.MessageDelay,
@@ -455,7 +465,7 @@ func ConsensusParamsFromProto(pbParams tmproto.ConsensusParams) ConsensusParams 
 			PubKeyTypes: pbParams.Validator.PubKeyTypes,
 		},
 		Version: VersionParams{
-			AppVersion: pbParams.Version.AppVersion,
+			App: pbParams.Version.App,
 		},
 	}
 	if pbParams.Synchrony != nil {

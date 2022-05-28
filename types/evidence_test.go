@@ -330,7 +330,7 @@ func makeVote(
 
 func makeHeaderRandom() *Header {
 	return &Header{
-		Version:            version.Consensus{Block: version.BlockProtocol, App: 1},
+		Version:            VersionParams{Block: version.BlockProtocol, App: 1},
 		ChainID:            tmrand.Str(12),
 		Height:             int64(mrand.Uint32() + 1),
 		Time:               time.Now(),
@@ -410,7 +410,7 @@ func TestEvidenceVectors(t *testing.T) {
 	nValidators := 10
 	voteSet, valSet, privVals := deterministicVoteSet(ctx, t, height, 1, tmproto.PrecommitType, 1)
 	header := &Header{
-		Version:            version.Consensus{Block: 1, App: 1},
+		Version:            VersionParams{Block: 1, App: 1},
 		ChainID:            chainID,
 		Height:             height,
 		Time:               time.Date(math.MaxInt64, 0, 0, 0, 0, 0, math.MaxInt64, time.UTC),

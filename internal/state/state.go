@@ -21,7 +21,7 @@ import (
 
 type Version struct {
 	Consensus version.Consensus ` json:"consensus"`
-	Software  string            ` json:"software"`
+	TMVersion string            ` json:"tendermintVersion"`
 }
 
 // InitStateVersion sets the Consensus.Block and Software versions,
@@ -33,7 +33,7 @@ var InitStateVersion = Version{
 		Block: version.BlockProtocol,
 		App:   0,
 	},
-	Software: version.TMVersion,
+	TMVersion: version.TMVersion,
 }
 
 func (v *Version) ToProto() tmstate.Version {
@@ -42,7 +42,7 @@ func (v *Version) ToProto() tmstate.Version {
 			Block: v.Consensus.Block,
 			App:   v.Consensus.App,
 		},
-		Software: v.Software,
+		TMVersion: v.TMVersion,
 	}
 }
 
@@ -52,7 +52,7 @@ func VersionFromProto(v tmstate.Version) Version {
 			Block: v.Consensus.Block,
 			App:   v.Consensus.App,
 		},
-		Software: v.Software,
+		TMVersion: v.TMVersion,
 	}
 }
 
@@ -274,7 +274,7 @@ func (state State) MakeBlock(
 
 	// Fill rest of header with state data.
 	block.Header.Populate(
-		state.Version.Consensus, state.ChainID,
+		state.ConsensusParams.Version, state.ChainID,
 		tmtime.Now(), state.LastBlockID,
 		state.Validators.Hash(), state.NextValidators.Hash(),
 		state.ConsensusParams.HashConsensusParams(), state.AppHash, state.LastResultsHash,

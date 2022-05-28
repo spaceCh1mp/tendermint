@@ -70,9 +70,9 @@ func TestValidateBlockHeader(t *testing.T) {
 
 	// some bad values
 	wrongHash := crypto.Checksum([]byte("this hash is wrong"))
-	wrongVersion1 := state.Version.Consensus
+	wrongVersion1 := state.ConsensusParams.Version
 	wrongVersion1.Block += 2
-	wrongVersion2 := state.Version.Consensus
+	wrongVersion2 := state.ConsensusParams.Version
 	wrongVersion2.App += 2
 
 	// Manipulation of any header field causes failure.

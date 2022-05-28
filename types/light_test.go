@@ -127,7 +127,7 @@ func TestSignedHeaderValidateBasic(t *testing.T) {
 	chainID := "𠜎"
 	timestamp := time.Date(math.MaxInt64, 0, 0, 0, 0, 0, math.MaxInt64, time.UTC)
 	h := Header{
-		Version:            version.Consensus{Block: version.BlockProtocol, App: math.MaxInt64},
+		Version:            VersionParams{Block: version.BlockProtocol, App: math.MaxInt64},
 		ChainID:            chainID,
 		Height:             commit.Height,
 		Time:               timestamp,

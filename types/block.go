@@ -309,7 +309,7 @@ func MaxDataBytesNoEvidence(maxBytes int64, valsCount int) int64 {
 func MakeBlock(height int64, txs []Tx, lastCommit *Commit, evidence []Evidence) *Block {
 	block := &Block{
 		Header: Header{
-			Version: version.Consensus{Block: version.BlockProtocol, App: 0},
+			Version: VersionParams{Block: version.BlockProtocol, App: 0},
 			Height:  height,
 		},
 		Data: Data{
@@ -331,10 +331,10 @@ func MakeBlock(height int64, txs []Tx, lastCommit *Commit, evidence []Evidence) 
 // - https://github.com/tendermint/tendermint/blob/master/spec/core/data_structures.md
 type Header struct {
 	// basic block info
-	Version version.Consensus `json:"version"`
-	ChainID string            `json:"chain_id"`
-	Height  int64             `json:"height,string"`
-	Time    time.Time         `json:"time"`
+	Version VersionParams `json:"version"`
+	ChainID string        `json:"chain_id"`
+	Height  int64         `json:"height,string"`
+	Time    time.Time     `json:"time"`
 
 	// prev block info
 	LastBlockID BlockID `json:"last_block_id"`
@@ -360,7 +360,7 @@ type Header struct {
 // Populate the Header with state-derived data.
 // Call this after MakeBlock to complete the Header.
 func (h *Header) Populate(
-	version version.Consensus, chainID string,
+	version VersionParams, chainID string,
 	timestamp time.Time, lastBlockID BlockID,
 	valHash, nextValHash []byte,
 	consensusHash, appHash, lastResultsHash []byte,
@@ -448,6 +448,7 @@ func (h *Header) Hash() tmbytes.HexBytes {
 	if h == nil || len(h.ValidatorsHash) == 0 {
 		return nil
 	}
+
 	hpb := h.Version.ToProto()
 	hbz, err := hpb.Marshal()
 	if err != nil {
@@ -559,7 +560,7 @@ func HeaderFromProto(ph *tmproto.Header) (Header, error) {
 		return Header{}, err
 	}
 
-	h.Version = version.Consensus{Block: ph.Version.Block, App: ph.Version.App}
+	h.Version = VersionParams{Block: ph.Version.Block, App: ph.Version.App}
 	h.ChainID = ph.ChainID
 	h.Height = ph.Height
 	h.Time = ph.Time

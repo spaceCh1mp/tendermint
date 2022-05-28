@@ -74,9 +74,9 @@ func Rollback(bs BlockStore, ss Store) (int64, []byte, error) {
 		Version: Version{
 			Consensus: version.Consensus{
 				Block: version.BlockProtocol,
-				App:   previousParams.Version.AppVersion,
+				App:   previousParams.Version.App,
 			},
-			Software: version.TMVersion,
+			TMVersion: version.TMVersion,
 		},
 		// immutable fields
 		ChainID:       invalidState.ChainID,

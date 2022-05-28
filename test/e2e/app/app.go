@@ -143,7 +143,7 @@ func (app *Application) InitChain(_ context.Context, req *abci.RequestInitChain)
 		AppHash: app.state.Hash,
 		ConsensusParams: &types.ConsensusParams{
 			Version: &types.VersionParams{
-				AppVersion: 1,
+				App: 1,
 			},
 		},
 	}

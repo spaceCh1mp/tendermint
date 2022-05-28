@@ -199,7 +199,7 @@ func randLightBlock(ctx context.Context, t *testing.T, height int64) *types.Ligh
 	return &types.LightBlock{
 		SignedHeader: &types.SignedHeader{
 			Header: &types.Header{
-				Version:            version.Consensus{Block: version.BlockProtocol, App: 0},
+				Version:            types.VersionParams{Block: version.BlockProtocol, App: 0},
 				ChainID:            tmrand.Str(12),
 				Height:             height,
 				Time:               time.Now(),

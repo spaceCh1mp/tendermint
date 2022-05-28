@@ -303,7 +303,7 @@ func (app *testApp) FinalizeBlock(_ context.Context, req *abci.RequestFinalizeBl
 		ValidatorUpdates: app.ValidatorUpdates,
 		ConsensusParamUpdates: &tmproto.ConsensusParams{
 			Version: &tmproto.VersionParams{
-				AppVersion: 1,
+				App: 1,
 			},
 		},
 		Events:    []abci.Event{},

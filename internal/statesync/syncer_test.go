@@ -32,7 +32,7 @@ func TestSyncer_SyncAny(t *testing.T) {
 				Block: version.BlockProtocol,
 				App:   testAppVersion,
 			},
-			Software: version.TMVersion,
+			TMVersion: version.TMVersion,
 		},
 
 		LastBlockHeight: 1,

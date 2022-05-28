@@ -32,7 +32,7 @@ message ConsensusParamsInfo {
 
 message Version {
   tendermint.version.Consensus consensus = 1 [(gogoproto.nullable) = false];
-  string                       software  = 2;
+  string                       TMVersion  = 2;
 }
 
 message State {

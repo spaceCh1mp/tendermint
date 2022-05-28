@@ -175,7 +175,7 @@ func TestFinalizeBlockByzantineValidators(t *testing.T) {
 	privVal := privVals[state.Validators.Validators[0].Address.String()]
 	blockID := makeBlockID([]byte("headerhash"), 1000, []byte("partshash"))
 	header := &types.Header{
-		Version:            version.Consensus{Block: version.BlockProtocol, App: 1},
+		Version:            types.VersionParams{Block: version.BlockProtocol, App: 1},
 		ChainID:            state.ChainID,
 		Height:             10,
 		Time:               defaultEvidenceTime,

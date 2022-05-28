@@ -23,8 +23,8 @@ import (
 	"github.com/tendermint/tendermint/libs/bytes"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmtime "github.com/tendermint/tendermint/libs/time"
+	"github.com/tendermint/tendermint/proto/tendermint/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	tmversion "github.com/tendermint/tendermint/proto/tendermint/version"
 	"github.com/tendermint/tendermint/version"
 )
 
@@ -356,7 +356,7 @@ func TestHeaderHash(t *testing.T) {
 		expectHash bytes.HexBytes
 	}{
 		{"Generates expected hash", &Header{
-			Version:            version.Consensus{Block: 1, App: 2},
+			Version:            VersionParams{Block: 1, App: 2},
 			ChainID:            "chainId",
 			Height:             3,
 			Time:               time.Date(2019, 10, 13, 16, 14, 44, 0, time.UTC),
@@ -373,7 +373,7 @@ func TestHeaderHash(t *testing.T) {
 		}, hexBytesFromString(t, "F740121F553B5418C3EFBD343C2DBFE9E007BB67B0D020A0741374BAB65242A4")},
 		{"nil header yields nil", nil, nil},
 		{"nil ValidatorsHash yields nil", &Header{
-			Version:            version.Consensus{Block: 1, App: 2},
+			Version:            VersionParams{Block: 1, App: 2},
 			ChainID:            "chainId",
 			Height:             3,
 			Time:               time.Date(2019, 10, 13, 16, 14, 44, 0, time.UTC),
@@ -413,8 +413,8 @@ func TestHeaderHash(t *testing.T) {
 						bz, err := gogotypes.StdTimeMarshal(f)
 						require.NoError(t, err)
 						byteSlices = append(byteSlices, bz)
-					case version.Consensus:
-						pbc := tmversion.Consensus{
+					case VersionParams:
+						pbc := types.VersionParams{
 							Block: f.Block,
 							App:   f.App,
 						}
@@ -452,7 +452,7 @@ func TestMaxHeaderBytes(t *testing.T) {
 	timestamp := time.Date(math.MaxInt64, 0, 0, 0, 0, 0, math.MaxInt64, time.UTC)
 
 	h := Header{
-		Version:            version.Consensus{Block: math.MaxInt64, App: math.MaxInt64},
+		Version:            VersionParams{Block: math.MaxInt64, App: math.MaxInt64},
 		ChainID:            maxChainID,
 		Height:             math.MaxInt64,
 		Time:               timestamp,
@@ -768,7 +768,7 @@ func MakeRandHeader() Header {
 	randBytes := tmrand.Bytes(crypto.HashSize)
 	randAddress := tmrand.Bytes(crypto.AddressSize)
 	h := Header{
-		Version:            version.Consensus{Block: version.BlockProtocol, App: 1},
+		Version:            VersionParams{Block: version.BlockProtocol, App: 1},
 		ChainID:            chainID,
 		Height:             height,
 		Time:               t,
@@ -978,13 +978,13 @@ func TestHeader_ValidateBasic(t *testing.T) {
 	}{
 		{
 			"invalid version block",
-			Header{Version: version.Consensus{Block: version.BlockProtocol + 1}},
+			Header{Version: VersionParams{Block: version.BlockProtocol + 1}},
 			true, "block protocol is incorrect",
 		},
 		{
 			"invalid chain ID length",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen+1)),
 			},
 			true, "chainID is too long",
@@ -992,7 +992,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid height (negative)",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  -1,
 			},
@@ -1001,7 +1001,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid height (zero)",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  0,
 			},
@@ -1010,7 +1010,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid block ID hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1022,7 +1022,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid block ID parts header hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1037,7 +1037,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid last commit hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1053,7 +1053,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid data hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1070,7 +1070,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid evidence hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1088,7 +1088,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid proposer address",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1107,7 +1107,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid validator hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1127,7 +1127,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid next validator hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1148,7 +1148,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid consensus hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1170,7 +1170,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"invalid last results hash",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1193,7 +1193,7 @@ func TestHeader_ValidateBasic(t *testing.T) {
 		{
 			"valid header",
 			Header{
-				Version: version.Consensus{Block: version.BlockProtocol},
+				Version: VersionParams{Block: version.BlockProtocol},
 				ChainID: string(make([]byte, MaxChainIDLen)),
 				Height:  1,
 				LastBlockID: BlockID{
@@ -1332,7 +1332,7 @@ func TestCommit_ValidateBasic(t *testing.T) {
 func TestHeaderHashVector(t *testing.T) {
 	chainID := "test"
 	h := Header{
-		Version:            version.Consensus{Block: 1, App: 1},
+		Version:            VersionParams{Block: 1, App: 1},
 		ChainID:            chainID,
 		Height:             50,
 		Time:               time.Date(math.MaxInt64, 0, 0, 0, 0, 0, math.MaxInt64, time.UTC),

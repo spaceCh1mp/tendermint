@@ -59,7 +59,8 @@ message ValidatorParams {
 
 // VersionParams contains the ABCI application version.
 message VersionParams {
-  uint64 app_version = 1;
+  uint64 app = 1;
+  uint64 block =2;
 }
 
 // HashedParams is a subset of ConsensusParams.

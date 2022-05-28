@@ -162,8 +162,7 @@ func (s *stateProviderRPC) State(ctx context.Context, height uint64) (sm.State, 
 	}
 
 	state.Version = sm.Version{
-		Consensus: currentLightBlock.Version,
-		Software:  version.TMVersion,
+		TMVersion: version.TMVersion,
 	}
 	state.LastBlockHeight = lastLightBlock.Height
 	state.LastBlockTime = lastLightBlock.Time
@@ -314,8 +313,7 @@ func (s *stateProviderP2P) State(ctx context.Context, height uint64) (sm.State, 
 	}
 
 	state.Version = sm.Version{
-		Consensus: currentLightBlock.Version,
-		Software:  version.TMVersion,
+		TMVersion: version.TMVersion,
 	}
 	state.LastBlockHeight = lastLightBlock.Height
 	state.LastBlockTime = lastLightBlock.Time

@@ -202,7 +202,7 @@ func TestStateSyncVectors(t *testing.T) {
 						PubKeyTypes: []string{ed25519.KeyType},
 					},
 					Version: &tmproto.VersionParams{
-						AppVersion: 11,
+						App: 11,
 					},
 					Synchrony: &tmproto.SynchronyParams{
 						MessageDelay: durationPtr(550),
